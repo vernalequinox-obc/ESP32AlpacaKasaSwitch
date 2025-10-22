@@ -88,7 +88,7 @@ void setup()
   delay(5000); // time to detect USB device
 #endif  
 
-  SLOG_INFO_PRINTF("BigPet ESP32ALPACAKasaSwitch ...\n");
+  SLOG_INFO_PRINTF("ESP32ALPACAKasaSwitch ...\n");
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);

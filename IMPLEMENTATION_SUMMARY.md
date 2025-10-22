@@ -7,7 +7,7 @@ This implementation adds the requested functionality to allow users to select wh
 
 ### 1. Web Interface for Switch Selection
 - **KasaSwitchToggles Section**: Added a new section in the setup web interface that displays all discovered Kasa switches
-- **Index Numbers**: Each switch is shown with its index number (Index 0: Switch Name) for easy identification in NINA sequencing
+- **Descriptive Names**: Each switch is shown with its descriptive name for easy identification in NINA sequencing
 - **Device Details**: Shows device model, IP address, and whether it's a child device or main device
 - **Enable/Disable Toggles**: Users can enable/disable individual switches with toggle switches
 - **Status Display**: Shows count of enabled vs total discovered switches
@@ -20,9 +20,9 @@ This implementation adds the requested functionality to allow users to select wh
 
 ### 3. Enhanced Switch Management
 - **Selective Activation**: Only enabled switches are initialized as active ASCOM switches
-- **Index-Based Naming**: Active switches use format "Index XX: Alias Name" for clear identification in NINA
+- **Descriptive Naming**: Active switches use their alias names directly for clear identification in NINA
 - **Faster Response**: NINA connections will be faster as only enabled switches need to be checked/controlled
-- **Discovery Order**: Switches are sorted alphabetically by name, then indexed sequentially for consistency
+- **Discovery Order**: Switches are sorted alphabetically by name for consistency
 
 ## Code Changes Made
 
@@ -37,7 +37,7 @@ This implementation adds the requested functionality to allow users to select wh
 - **Modified Constructor**: `KasaPlug` constructor now initializes `enabled = true` by default
 - **Enhanced AlpacaWriteJson()**: 
   - Creates `KasaSwitchToggles` section for web interface
-  - Shows all discovered switches with their index numbers
+  - Shows all discovered switches with their names
   - Displays device details (model, IP, child status)
   - Shows current enabled/disabled count
 - **Enhanced AlpacaReadJson()**:

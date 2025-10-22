@@ -19,7 +19,7 @@ This project transforms your ESP32 into an ASCOM Alpaca server that can discover
 - 🌐 **Web Interface**: Easy configuration through built-in web server
 - 💾 **Persistent Settings**: Switch selections survive power cycles
 - 🚀 **ASCOM Compliant**: Full Alpaca Switch v3 interface support
-- 📱 **NINA Integration**: Optimized for NINA sequencing with indexed switch names
+- 📱 **NINA Integration**: Optimized for NINA sequencing with descriptive switch names
 
 ## Hardware Requirements
 
@@ -109,7 +109,7 @@ const char* password = "YourWiFiPassword";
 2. **Select Switches**:
    - Toggle switches ON/OFF to enable/disable them for ASCOM use
    - Enabled switches will be available to NINA and other ASCOM clients
-   - Each switch shows: Index number, Name, Model, IP address
+   - Each switch shows: Name, Model, IP address
 
 3. **Save Configuration**:
    - Click "Save" to store your selections
@@ -130,8 +130,8 @@ const char* password = "YourWiFiPassword";
    - **Device Number**: 0
 
 3. **Switch Naming**:
-   - Switches appear as "Index 0: Device Name", "Index 1: Device Name", etc.
-   - Use index numbers in NINA Advanced Sequencer for reliable automation
+   - Switches appear with their descriptive names (e.g., "StripLight", "MainMount", etc.)
+   - Use descriptive names in NINA Advanced Sequencer for clear automation
 
 #### Other ASCOM Software
 - Use same connection parameters (IP:80, device 0)

@@ -698,9 +698,9 @@ void Switch::AlpacaReadJson(JsonObject &root) {
         for (size_t i = 0; i < discovered_switches.size(); ++i) {
             const auto& plug = discovered_switches[i];
             
-            // Create the same shorter key format as in AlpacaWriteJson
+            // Create the same clean key format as in AlpacaWriteJson
             char switch_key[32];
-            snprintf(switch_key, sizeof(switch_key), "sw%zu_%s", i, plug.name.c_str());
+            snprintf(switch_key, sizeof(switch_key), "%s", plug.name.c_str());
             
             // Replace spaces and special characters with underscores
             for (char* p = switch_key; *p; ++p) {
@@ -804,9 +804,9 @@ void Switch::AlpacaWriteJson(JsonObject &root) {
         for (size_t i = 0; i < discovered_switches.size(); ++i) {
         const auto& plug = discovered_switches[i];
         
-        // Create a shorter field name to prevent word wrapping and avoid numeric literal parsing issues
+        // Create a clean field name using just the switch name
         char switch_key[32];
-        snprintf(switch_key, sizeof(switch_key), "sw%zu_%s", i, plug.name.c_str());
+        snprintf(switch_key, sizeof(switch_key), "%s", plug.name.c_str());
         
         // Replace spaces and special characters with underscores, but keep it shorter
         for (char* p = switch_key; *p; ++p) {
@@ -961,12 +961,9 @@ void Switch::UpdateEnabledSwitches() {
         auto& plug = switches[id];
         bool is_child = plug.is_child;
         
-        // Create switch name with index for NINA sequencing
-        char switch_name[128];
-        snprintf(switch_name, sizeof(switch_name), "Index %zu: %s", id, plug.name.c_str());
-        
+        // Use plain switch name without index prefix
         std::string desc = std::string("Kasa ") + (is_child ? "Child " : "") + "Plug " + plug.model;
-        InitSwitchName(id, switch_name);
+        InitSwitchName(id, plug.name.c_str());
         InitSwitchDescription(id, desc.c_str());
         InitSwitchCanWrite(id, true);
         InitSwitchMinValue(id, 0.0);
@@ -976,7 +973,7 @@ void Switch::UpdateEnabledSwitches() {
         InitSwitchInitBySetup(id, true);  // Only enabled switches are setup
         
 #ifdef DEBUG_SWITCH
-        SLOG_DEBUG_PRINTF("Initialized enabled switch %zu: %s\n", id, switch_name);
+        SLOG_DEBUG_PRINTF("Initialized enabled switch %zu: %s\n", id, plug.name.c_str());
 #endif
     }
 
@@ -1029,12 +1026,9 @@ void Switch::InitializeSwitchesFromMemory() {
         auto& plug = switches[id];
         bool is_child = plug.is_child;
         
-        // Create switch name with index for NINA sequencing
-        char switch_name[128];
-        snprintf(switch_name, sizeof(switch_name), "Index %zu: %s", id, plug.name.c_str());
-        
+        // Use plain switch name without index prefix
         std::string desc = std::string("Kasa ") + (is_child ? "Child " : "") + "Plug " + plug.model;
-        InitSwitchName(id, switch_name);
+        InitSwitchName(id, plug.name.c_str());
         InitSwitchDescription(id, desc.c_str());
         InitSwitchCanWrite(id, true);
         InitSwitchMinValue(id, 0.0);

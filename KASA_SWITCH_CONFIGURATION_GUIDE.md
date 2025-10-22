@@ -13,12 +13,12 @@ This version supports enabling/disabling individual Kasa smart plugs through a w
 ### 2. **Web-Based Configuration Interface**
 - Enhanced setup.html with dedicated "Kasa Switches" tab
 - Real-time enable/disable toggle switches
-- Shows Alpaca index assignments for enabled switches
+- Shows enabled switches with their descriptive names
 - Displays device information (name, IP, model, type)
 
-### 3. **Automatic Index Management**
+### 3. **Switch Management**
 - Alpaca switch indices (0, 1, 2, ...) are automatically assigned to enabled switches
-- Index assignment follows the sorted order of enabled switches
+- Switches are presented with their descriptive names for easy identification
 - Disabled switches don't consume Alpaca indices
 
 ## How It Works
@@ -54,7 +54,7 @@ http://[ESP32-IP-ADDRESS]/setup
 
 ### 3. **Configure Switches**
 - **Enable/Disable**: Use toggle switches to enable/disable devices
-- **View Index**: See which Alpaca index each enabled switch will use
+- **View Names**: See the descriptive names of enabled switches
 - **Device Info**: Review device names, IP addresses, and models
 
 ### 4. **Save Configuration**

@@ -12,7 +12,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-const char* ssid = "YOUR_WIFI_SSID";        // Replace with your WiFi SSID
-const char* password = "YOUR_WIFI_PASSWORD"; // Replace with your WiFi password
+const char* ssid = "SSID";        // Replace with your WiFi SSID
+const char* password = "PASSWORD"; // Replace with your WiFi password
 
 #endif
