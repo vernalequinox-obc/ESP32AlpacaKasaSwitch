@@ -1,0 +1,183 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build Filesystem Image (nodemcu-32s)",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe run",
+			"args": [
+				"--target",
+				"buildfs",
+				"--environment",
+				"nodemcu-32s"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload Filesystem Image (nodemcu-32s)",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe run",
+			"args": [
+				"--target",
+				"uploadfs",
+				"--environment",
+				"nodemcu-32s"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build Filesystem Image (nodemcu-32s)",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe run",
+			"args": [
+				"--target",
+				"buildfs",
+				"--environment",
+				"nodemcu-32s"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload Filesystem Image (nodemcu-32s)",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe run",
+			"args": [
+				"--target",
+				"uploadfs",
+				"--environment",
+				"nodemcu-32s"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build Filesystem Image (nodemcu-32s)",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"buildfs",
+				"--environment",
+				"nodemcu-32s"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload Filesystem Image (nodemcu-32s)",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"uploadfs",
+				"--environment",
+				"nodemcu-32s"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build Filesystem Image (nodemcu-32s)",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"buildfs",
+				"--environment",
+				"nodemcu-32s"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload Filesystem Image (nodemcu-32s)",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"uploadfs",
+				"--environment",
+				"nodemcu-32s"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload Filesystem Image (nodemcu-32s)",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"uploadfs",
+				"--environment",
+				"nodemcu-32s"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "C:\\Users\\Dad\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run"
+			],
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build"
+		}
+	]
+}

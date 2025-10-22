@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Alpaca Ascom Drivers Setup</title>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="/www/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/www/css/jquery-ui.min.css">
+        <link rel="stylesheet" href="/www/css/theme.css">
+
+        <script src="/www/js/jquery.min.js"></script>
+        <script src="/www/js/jquery-ui.min.js"></script>
+        <script src="/www/js/bootstrap.min.js"></script>
+        <script src="/www/js/jsonFormer.jquery.js"></script>
+
+    </head>
+    <body>
+    <div class="container">
+            <div class="card mb-3 mt-3">
+                <div class="card-header">
+                    <div id="title"><H3>Alpaca Ascom Drivers Setup</H3></div>
+                    <ul id="nav-links" class="nav nav-tabs card-header-tabs">
+                    </ul>
+                </div>
+            <div class="card-body">
+                <div id="form-container" style="margin-right: 20px; min-height: 100px;"></div>
+                <div style="margin-top: 20px;">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="action-buttons">
+                                <button type="button" id="discover_kasa" class="btn btn-success">
+                                    <i class="fa fa-search" aria-hidden="true"></i> Discover Kasa Devices
+                                </button>
+                                <button type="button" id="recheck_saved" class="btn btn-info">
+                                    <i class="fa fa-refresh" aria-hidden="true"></i> Re-check Saved
+                                </button>
+                                <button type="button" id="json_save" class="btn btn-warning">
+                                    <i class="fa fa-save" aria-hidden="true"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="status-message" class="alert" style="display: none; margin-top: 15px;"></div>
+                <div id="progress-container" style="display: none; margin-top: 15px;">
+                    <div class="alert alert-info">
+                        <strong>Discovering Kasa devices...</strong>
+                        <div class="progress mt-2">
+                            <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <small id="progress-text">Starting discovery...</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $.ajaxSetup({ cache: false });
+                let hiddenKeyMap = null; // preserve hidden map for POST
+                let originalData = null; // keep original form data
+                $.getJSON("jsondata", function(data) {
+                    originalData = JSON.parse(JSON.stringify(data));
+                    // Hide internal helper objects from rendering
+                    if (data && data.hasOwnProperty('_KasaSwitchKeyMapHidden')) {
+                        hiddenKeyMap = data._KasaSwitchKeyMapHidden; // stash for later POST
+                        delete data._KasaSwitchKeyMapHidden;
+                    }
+                    // Hide robust helper array from rendering
+                    if (data && data.hasOwnProperty('KasaEnabledKeys')) {
+                        delete data.KasaEnabledKeys;
+                    }
+                    // If server indicates no devices yet, show a friendly info banner and remove from form JSON
+                    if (data && data.DiscoveryInfo && data.DiscoveryInfo.message) {
+                        $("#status-message")
+                            .removeClass("alert-success alert-danger")
+                            .addClass("alert-info")
+                            .text(data.DiscoveryInfo.message)
+                            .show();
+                        delete data.DiscoveryInfo; // avoid rendering an editable textbox for the message
+                    }
+                    $('#form-container').jsonFormer({
+                        title: "Setup",
+                        jsonObject: data
+                    });
+                    data;       
+                });
+                $("#discover_kasa").click(function () {
+                    console.log("Discovery button clicked"); // Debug log
+                    
+                    // Hide status message and show progress
+                    $("#status-message").hide();
+                    $("#progress-container").show();
+                    $("#discover_kasa").prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Discovering...');
+                    
+                    // Start progress bar animation
+                    var progress = 0;
+                    var progressInterval = setInterval(function() {
+                        progress += 2;
+                        $("#progress-bar").css('width', progress + '%');
+                        
+                        if (progress < 30) {
+                            $("#progress-text").text("Scanning network for Kasa devices...");
+                        } else if (progress < 60) {
+                            $("#progress-text").text("Connecting to discovered devices...");
+                        } else if (progress < 90) {
+                            $("#progress-text").text("Gathering device information...");
+                        } else {
+                            $("#progress-text").text("Finalizing discovery...");
+                        }
+                        
+                        if (progress >= 95) {
+                            clearInterval(progressInterval);
+                        }
+                    }, 300); // Update every 300ms
+                    
+                    // Send discovery request
+                    $.ajax({
+                        url: 'jsondata',
+                        type: 'POST',
+                        dataType: "json",
+                        data: JSON.stringify({"KasaDiscoveryTrigger": true}),
+                        contentType: 'application/json',
+                        timeout: 30000, // 30 second timeout
+                        success: function(response) {
+                            console.log("Discovery response:", response); // Debug log
+                            clearInterval(progressInterval);
+                            $("#progress-bar").css('width', '100%');
+                            $("#progress-text").text("Discovery completed!");
+                            
+                            setTimeout(function() {
+                                $("#progress-container").hide();
+                                $("#status-message").removeClass("alert-info alert-danger").addClass("alert-success").text("Discovery completed! Found devices. Refreshing page...").show();
+                                
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
+                            }, 1000);
+                        },
+                        error: function(xhr, status, error) {
+                            console.log("Discovery error:", xhr, status, error); // Debug log
+                            clearInterval(progressInterval);
+                            $("#progress-container").hide();
+                            $("#status-message").removeClass("alert-info alert-success").addClass("alert-danger").text("Discovery failed: " + error + ". Check console for details.").show();
+                            $("#discover_kasa").prop('disabled', false).html('<i class="fa fa-search"></i> Discover Kasa Devices');
+                        }
+                    });
+                });
+                $("#recheck_saved").click(function () {
+                    // Hide status and show progress
+                    $("#status-message").hide();
+                    $("#progress-container").show();
+                    $("#recheck_saved").prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Re-checking...');
+                    var progress = 0;
+                    var progressInterval = setInterval(function() {
+                        progress += 5;
+                        $("#progress-bar").css('width', progress + '%');
+                        $("#progress-text").text("Validating saved devices...");
+                        if (progress >= 95) { clearInterval(progressInterval); }
+                    }, 200);
+
+                    $.ajax({
+                        url: 'jsondata',
+                        type: 'POST',
+                        dataType: "json",
+                        data: JSON.stringify({"KasaRecheckSaved": true}),
+                        contentType: 'application/json',
+                        timeout: 15000,
+                        success: function(response) {
+                            clearInterval(progressInterval);
+                            $("#progress-bar").css('width', '100%');
+                            $("#progress-text").text("Re-check completed!");
+                            setTimeout(function() {
+                                $("#progress-container").hide();
+                                $("#status-message").removeClass("alert-info alert-danger").addClass("alert-success").text("Re-check completed. Refreshing...").show();
+                                setTimeout(function() { location.reload(); }, 1500);
+                            }, 500);
+                        },
+                        error: function(xhr, status, error) {
+                            clearInterval(progressInterval);
+                            $("#progress-container").hide();
+                            $("#status-message").removeClass("alert-info alert-success").addClass("alert-danger").text("Re-check failed: " + error).show();
+                            $("#recheck_saved").prop('disabled', false).html('<i class="fa fa-refresh"></i> Re-check Saved');
+                        }
+                    });
+                });
+                $("#json_save").click(function () {
+                    // First POST current form data to jsondata, then call save_settings
+                    var formData = $('#form-container').jsonFormer('formData');
+                    // Reattach hidden key map so server can map short keys back to stable keys
+                    if (hiddenKeyMap) {
+                        formData._KasaSwitchKeyMapHidden = hiddenKeyMap;
+                    }
+                    // Always include a complete KasaSwitchSelection built from current checkbox states
+                    var selection = {};
+                    var enabledKeys = [];
+                    $("input[type='checkbox']").each(function(){
+                        var id = this.id || '';
+                        var marker = 'KasaSwitchSelection-';
+                        var idx = id.indexOf(marker);
+                        if (idx < 0) return; // not one of our switches
+                        var key = id.substring(idx + marker.length);
+                        var checked = $(this).is(':checked');
+                        selection[key] = checked;
+                        if (checked && hiddenKeyMap && hiddenKeyMap[key]) {
+                            enabledKeys.push(hiddenKeyMap[key]);
+                        }
+                    });
+                    formData.KasaSwitchSelection = selection;
+                    if (enabledKeys.length > 0) {
+                        formData.KasaEnabledKeys = enabledKeys;
+                    }
+                    $("#status-message").hide();
+                    $.ajax({
+                        url: 'jsondata',
+                        type: 'POST',
+                        dataType: "json",
+                        data: JSON.stringify(formData),
+                        contentType: 'application/json',
+                        success: function(_) {
+                            $.getJSON('/save_settings', function(data) {
+                                var ok = (data && data['saved'] === true);
+                                $("#status-message").removeClass("alert-info alert-danger").addClass(ok ? "alert-success" : "alert-danger");
+                                $("#status-message").text(ok ? 'Settings saved successfully.' : 'Save failed.').show();
+                            }).fail(function(){
+                                $("#status-message").removeClass("alert-info alert-success").addClass("alert-danger").text('Save failed.').show();
+                            });
+                        },
+                        error: function() {
+                            $("#status-message").removeClass("alert-info alert-success").addClass("alert-danger").text('Failed to send settings to device.').show();
+                        }
+                    });
+                });
+                $.getJSON("/links", function(data) {
+                    let path = window.location.pathname;
+                    for(name in data) {
+                        let url = data[name];
+                        let navitem = $('<li class="nav-item"><a class="nav-link" href="#"></a></li>');
+                        let a = navitem.find("a");
+                        a.attr('href', url).text(name);
+                        if(path == url)
+                            a.addClass('active');
+                        $("#nav-links").append(navitem);
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
